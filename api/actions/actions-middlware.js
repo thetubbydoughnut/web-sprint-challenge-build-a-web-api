@@ -18,7 +18,7 @@ async function validateActionId (req, res, next) {
 }
 
 function validateAction (req, res, next) {
-    const { project_id, description, notes } = req.body
+    const { project_id, description, notes, completed } = req.body
 
     if (typeof project_id !== "number") {
         return res.status(400).json({ message: "Project ID must be a number" })
@@ -28,6 +28,9 @@ function validateAction (req, res, next) {
     }
     if (!notes || typeof notes !== 'string') {
         return res.status(400).json({ message: "Notes must be a string" })
+    }
+    if (typeof completed !== "boolean") {
+        return res.status(400).json({ message: 'Completed field must be a boolean'})
     }
 
     next()

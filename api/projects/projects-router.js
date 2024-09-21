@@ -1,7 +1,6 @@
 // Write your "projects" router here!
 const express = require('express');
 const Projects = require('./projects-model')
-const Actions = require('../actions/actions-model')
 const { validateProjectId, validateProject} = require('./projects-middleware')
 
 const router = express.Router();
@@ -45,12 +44,12 @@ router.delete('/:id', validateProjectId, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/:id/actions', validateProjectId, (req, res, next) => {
-    Actions.get(req.params.id)
-    .then(actions =>
-       res.status(200).json(actions) 
-    )
-    .catch(next)
+// Action routes within the Projects
+const actionsRouter = express.Router();
+router.use('/', actionsRouter)
+
+router.get('/:id/actions', validateProjectId, (req, res) => {
+       res.status(200).json(req.project.actions) 
 })
 
 router.use((error, req, res, next) => { //eslint-disable-line

@@ -18,7 +18,7 @@ async function validateProjectId(req, res, next) {
 }
 
 function validateProject(req, res, next) {
-    const { name, description } = req.body
+    const { name, description, completed } = req.body
 
     if (!name || typeof name !== "string" || !name.trim()) {
         return res.status(400).json({ message: "Missing required name field" })
@@ -26,12 +26,13 @@ function validateProject(req, res, next) {
     else if (!description || typeof description !== "string") {
         return res.status(400).json({ message: "Missing required description field" })
     }
+    else if (typeof completed !== "boolean") {
+        return res.status(400).json({ message: "Completed field must be a boolean" })
+    }
 
     req.name = name.trim();
     next()
 }
-
-
 
 module.exports = {
     validateProjectId,
