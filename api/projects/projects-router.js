@@ -48,9 +48,16 @@ router.delete('/:id', validateProjectId, (req, res, next) => {
 const actionsRouter = express.Router();
 router.use('/', actionsRouter)
 
-router.get('/:id/actions', validateProjectId, (req, res) => {
-       res.status(200).json(req.project.actions) 
-})
+router.get('/:id/actions', validateProjectId, async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const actions = await Projects.getProjectActions(id);
+        console.log(actions); // Log the actions to see the data being returned
+        res.status(200).json(actions);
+    } catch (err) {
+        next(err);
+    }
+});
 
 router.use((error, req, res, next) => { //eslint-disable-line
     res.status(error.status || 500).json({
